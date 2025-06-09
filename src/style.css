@@ -60,10 +60,12 @@ button:focus-visible {
 }
 
 #app {
-  max-width: 1280px;
+  max-width: 100vw;  /* vw = viewport width, jadi maksimal lebar layar */
+  width: 100%;       /* supaya elemen ini memang selalu selebar layar */
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  box-sizing: border-box; /* supaya padding tidak bikin lebar melebihi layar */
 }
 
 @media (prefers-color-scheme: light) {
