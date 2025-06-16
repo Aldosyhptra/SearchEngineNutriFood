@@ -9,8 +9,7 @@ function onSubmit(e) {
   e.preventDefault()
   if (keyword.value.trim() === '') return
 
-  // Redirect ke halaman searchlist dengan query parameter ?q=keyword
-  router.push({ name: 'SearchList', query: { q: keyword.value.trim() } })
+   router.push({ name: 'SearchList', query: { query: keyword.value.trim(), page: 1 } })
 }
 </script>
 

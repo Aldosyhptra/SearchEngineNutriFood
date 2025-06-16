@@ -9,7 +9,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/searchlist',
+    path: '/search/cosine',
     name: 'SearchList',
     component: SearchList
   }
