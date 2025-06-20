@@ -106,7 +106,9 @@ onUnmounted(() => {
     </div>
 
     <FoodList v-else-if="Array.isArray(recipes) && recipes.length > 0" :recipes="recipes" />
-      <div v-else class="text-center mt-5 text-red-600">Terjadi kesalahan saat memuat data.</div>
+      <div v-else class="text-center mt-5 text-red-600">Terjadi kesalahan saat memuat data.</div>    
+      <p v-if="!loading && recipes.length" class="p-3 rounded-lg  text-white">
+      Halaman <span class="font-bold"> {{ page }} </span> dari <span class="font-bold"> {{ pagination.total_pages }} </span></p>
   </div>
 
   <div v-if="!loading && recipes.length" class="flex justify-center md:mt-6 space-x-5">
@@ -117,12 +119,10 @@ onUnmounted(() => {
     >
       « Sebelumnya
     </button>
-    <p class="p-3 border rounded-lg bg-white text-gray-800">
-      Halaman <span class="font-bold"> {{ page }} </span> dari <span class="font-bold"> {{ pagination.total_pages }} </span></p>
     <button
       @click="goToPage(page + 1)"
       :disabled="page >= pagination.total_pages"
-      class="px-3 py-1 border rounded bg-white text-gray-800 hover:bg-gray-200 disabled:opacity-50"
+      class="px-3 py-1  border rounded bg-white text-gray-800 hover:bg-gray-200 disabled:opacity-50"
     >
      Selanjutnya »
     </button>
