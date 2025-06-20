@@ -37,7 +37,7 @@ const limitWords = (text, limit) => {
         <a  class="text-2xl capitalize font-semibold text-blue-600 hover:underline cursor-pointer">
           {{ recipe.judul }}
         </a>
-        <p class="mt-3 italic text-gray-500">{{ recipe.gizi }}</p>
+        <p class="mt-3 italic text-gray-500">Gizi : {{ recipe.gizi }}</p>
         
         <h3 class="mt-4 font-semibold">Bahan:</h3>
         <p>{{ limitWords(recipe.bahan, 25) }}</p>
