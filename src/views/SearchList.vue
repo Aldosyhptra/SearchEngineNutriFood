@@ -10,9 +10,8 @@ const router = useRouter()
 
 const query = ref(route.query.query || '')
 const page = ref(Number(route.query.page) || 1)
-
+const model = ref(route.params.model || 'cosine')
 const recipes = ref([])
-
 const loading = ref(false)
 
 const pagination = ref({
@@ -20,50 +19,86 @@ const pagination = ref({
   per_page: 10,
   total: 0,
   total_pages: 1
-});
+})
 
-const fetchRecipes = async () => {
-  if (!query.value.trim()) return 
+const isOpen = ref(false)
+const dropdownRef = ref(null)
 
-  loading.value = true
-  try {
-    const response = await axios.get(`http://127.0.0.1:5000/search/cosine`, {
-      params: { query: query.value, page: page.value },
-    })
+function toggleDropdown() {
+  isOpen.value = !isOpen.value
+}
 
-    const data = (response.data);
-
-    recipes.value = data.results || [];
-    pagination.value = data.pagination;
-
-    loading.value = false;
-
-  } catch (error) {
-    console.error('Gagal fetch data:', error);
+function handleClickOutside(e) {
+  if (dropdownRef.value && !dropdownRef.value.contains(e.target)) {
+    isOpen.value = false
   }
 }
 
-const goToPage = (newPage) => {
+// Fungsi berpindah model
+function modelGet(modelinput) {
+  model.value = modelinput
+  router.push({
+    name: 'SearchList',
+    params: { model: modelinput },
+    query: {
+      query: query.value,
+      page: 1
+    }
+  })
+}
+
+// Fungsi pagination
+function goToPage(newPage) {
   if (
     newPage !== page.value &&
     newPage >= 1 &&
     newPage <= pagination.value.total_pages
   ) {
-    router.push({ name: 'SearchList', query: { query: query.value, page: newPage } })
+    router.push({
+      name: 'SearchList',
+      params: { model: model.value },
+      query: {
+        query: query.value,
+        page: newPage
+      }
+    })
   }
 }
 
-onMounted(fetchRecipes)
+// Ambil data dari backend
+const fetchRecipes = async () => {
+  if (!query.value.trim()) return
 
-watch(
-  () => route.query,
-  (newQuery) => {
-    query.value = newQuery.query || ''
-      page.value = parseInt(route.query.page) || 1;
-    fetchRecipes()
+  loading.value = true
+  try {
+    const response = await axios.get(`http://127.0.0.1:5000/search/${model.value}`, {
+      params: { query: query.value, page: page.value }
+    })
+
+    const data = response.data
+    recipes.value = data.results || []
+    pagination.value = data.pagination
+  } catch (error) {
+    console.error('Gagal fetch data:', error)
+    recipes.value = []
+  } finally {
+    loading.value = false
   }
+}
+
+// Watcher untuk perubahan route
+watch(
+  () => route.fullPath,
+  () => {
+    query.value = route.query.query || ''
+    page.value = parseInt(route.query.page) || 1
+    model.value = route.params.model || 'cosine'
+    fetchRecipes()
+  },
+  { immediate: true }
 )
 
+// Untuk navbar animasi
 const isScrollingDown = ref(false)
 let lastScrollY = window.scrollY
 
@@ -75,10 +110,12 @@ const handleScroll = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+  document.addEventListener('click', handleClickOutside)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -106,7 +143,7 @@ onUnmounted(() => {
     </div>
 
     <FoodList v-else-if="Array.isArray(recipes) && recipes.length > 0" :recipes="recipes" />
-      <div v-else class="text-center mt-5 text-red-600">Terjadi kesalahan saat memuat data.</div>    
+      <div v-else class="text-center mt-5 text-white">Resep Tidak Ada</div>    
       <p v-if="!loading && recipes.length" class="p-3 rounded-lg  text-white">
       Halaman <span class="font-bold"> {{ page }} </span> dari <span class="font-bold"> {{ pagination.total_pages }} </span></p>
   </div>
