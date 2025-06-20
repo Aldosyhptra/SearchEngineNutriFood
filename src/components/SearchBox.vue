@@ -112,7 +112,8 @@ function selectSuggestion(suggestion) {
           placeholder="Telusuri Resep..."
           autocomplete="off"
         />
-        <ul v-if="suggestions.length > 0" class="absolute z-10 bg-[#213547] border border-gray-600 w-full rounded mt-1 shadow-lg max-h-48 overflow-y-auto">
+        <ul v-if="suggestions.length > 0 && !(keyword === '' || suggestions.map(s => s.toLowerCase()).includes(keyword.toLowerCase()))"
+          class="absolute z-10 bg-[#213547] border border-gray-600 w-full rounded mt-1 shadow-lg max-h-48 overflow-y-auto">
           <li v-for="(item, index) in suggestions" :key="index" @click="selectSuggestion(item)"
               class="px-4 py-2 transition-all transition-200 hover:bg-blue-900 cursor-pointer">
             {{ item }}
