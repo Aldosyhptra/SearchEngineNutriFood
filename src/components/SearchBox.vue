@@ -1,12 +1,14 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { X } from 'lucide-vue-next'
-import { useRouter } from 'vue-router'
-
-const keyword = ref('')
-const model = ref('cosine') // default
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
+
+const keyword = ref(route.query.query || '')
+const model = ref('cosine') // default
+
 
 const keywordList = [
   'Nasi Goreng',
@@ -89,7 +91,7 @@ function onSubmit(e) {
 }
 
 function selectSuggestion(suggestion) {
-  searchWithModel(suggestion)
+  keyword.value = suggestion
 }
 </script>
 
