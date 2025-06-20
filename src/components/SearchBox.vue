@@ -81,7 +81,6 @@ function searchWithModel(value) {
     params: { model: model.value },
     query: { query: value.toLowerCase().trim(), page: 1 }
   })
-  keyword.value = ""
 }
 
 function onSubmit(e) {
