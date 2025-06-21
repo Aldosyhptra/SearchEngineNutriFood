@@ -44,14 +44,22 @@ const limitWords = (text, limit) => {
         <p>{{ limitWords(recipe.bahan, 25) }}</p>
       </div>
       
-        <img :src="recipe.gambar" :alt="recipe.judul" class="w-50 max-w-xs mt-2 rounded mx-auto md:ml-5 h-50 object-cover" />
+        <img
+          :src="'http://localhost:5000/image_proxy?url=' + encodeURIComponent(recipe.gambar)"
+          :alt="recipe.judul"
+          class="w-50 max-w-xs mt-2 rounded mx-auto md:ml-5 h-50 object-cover"
+        />
       <div>
         <Modal v-if="showModal" @close="showModal = false">
           <div class=" flex justify-end items-end -mr-3 md:-mr-0">
             <X @click="showModal = false" class="fixed top-15 w-10 h-10 text-gray-700 hover:text-black cursor-pointer" />
           </div>
             <h2 class="text-xl px-10 md:px-0 text-black capitalize font-bold mb-4">{{ selectedRecipe.judul }}</h2>
-            <img :src="selectedRecipe.gambar" :alt="selectedRecipe.judul" class="w-50 h-50 object-cover max-w-xs mt-2 rounded mx-auto" />
+            <img
+              :src="'http://localhost:5000/image_proxy?url=' + encodeURIComponent(selectedRecipe.gambar)"
+              :alt="selectedRecipe.judul"
+              class="w-50 h-50 object-cover max-w-xs mt-2 rounded mx-auto"
+            />
             <p class="mt-3 italic text-gray-500">Gizi : {{ selectedRecipe.gizi }}</p>
             <div class="mt-4 text-black">
               <h3 class="font-semibold">Bahan:</h3>
